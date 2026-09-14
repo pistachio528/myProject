@@ -10,7 +10,6 @@
 ├── seckill-frontend/      # 前端（Vue 3 + Vite）
 ├── docker-compose.yml     # 基础设施（MySQL、Redis、RabbitMQ、Milvus）
 ├── jmeter/                # 压测脚本
-└── docs/                  # 项目文档（架构、深度解析、面试QA）
 ```
 
 ---
@@ -272,21 +271,6 @@ jmeter/
 
 ---
 
-## 六、docs — 项目文档
-
-| 文件 | 内容 |
-|------|------|
-| `01-architecture-overview.md` | 整体架构设计 |
-| `02-seckill-core-deep-dive.md` | 秒杀核心深度解析 |
-| `03-ai-chat-deep-dive.md` | 智能客服深度解析 |
-| `04-frontend-deep-dive.md` | 前端深度解析 |
-| `05-business-flows.md` | 业务流程图 |
-| `06-interview-qa.md` | 面试问答 |
-| `07-highlights-and-challenges.md` | 亮点与挑战 |
-| `08-logic-walkthrough.md` | 代码逻辑走读 |
-| `09-test-engineering.md` | 测试工程 |
-
----
 
 ## 快速启动
 
