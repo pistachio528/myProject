@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hmdp.mapper.LocalMessageMapper">
+
+    <!--
+        查询超时的 PENDING 消息
+        条件：status = 'PENDING' 且 create_time < 传入的超时时间点
+        用于定时重试任务扫描待重试消息
+    -->
+    <select id="findPendingTimeout" resultType="com.hmdp.entity.LocalMessage">
+        SELECT id,
+               voucher_id,
+               user_id,
+               token,
+               status,
+               retry_count,
+               create_time,
+               update_time
+        FROM local_message
+        WHERE status = 'PENDING'
+          AND create_time &lt; #{timeout}
+        ORDER BY create_time ASC
+        LIMIT 100
+    </select>
+
+</mapper>
