@@ -1,0 +1,67 @@
+/* CSS Reset */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* 颜色变量 */
+:root {
+  --primary: #e74c3c;
+  --primary-hover: #c0392b;
+  --success: #27ae60;
+  --warning: #f39c12;
+  --danger: #e74c3c;
+  --gray: #999;
+  --border: #e0e0e0;
+  --bg: #f5f5f5;
+}
+
+body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; background: var(--bg); color: #333; }
+
+/* 页面居中容器 */
+.page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+
+/* 卡片 */
+.card { background: #fff; border-radius: 12px; padding: 32px; width: 100%; max-width: 420px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.card h2 { text-align: center; margin-bottom: 24px; font-size: 20px; color: #333; }
+
+/* 输入框 */
+input { width: 100%; height: 44px; border: 1px solid var(--border); border-radius: 8px; padding: 0 12px; font-size: 15px; outline: none; transition: border-color 0.2s; }
+input:focus { border-color: var(--primary); }
+
+/* 按钮 */
+button { height: 44px; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; transition: background 0.2s; }
+.btn-primary { background: var(--primary); color: #fff; width: 100%; }
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+.btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+.btn-outline { background: #fff; color: var(--primary); border: 1px solid var(--primary); padding: 0 16px; }
+.btn-outline:disabled { color: var(--gray); border-color: var(--border); cursor: not-allowed; }
+
+/* 表单项间距 */
+.form-item { margin-bottom: 16px; }
+.code-row { display: flex; gap: 8px; }
+.code-row input { flex: 1; }
+
+/* 错误提示 */
+.error { color: var(--danger); font-size: 13px; margin-top: 8px; text-align: center; }
+
+/* 优惠券列表 */
+.voucher-list { max-width: 600px; margin: 0 auto; padding: 20px; }
+.voucher-list h2 { margin-bottom: 16px; }
+.voucher-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; }
+.voucher-info h3 { font-size: 16px; margin-bottom: 4px; }
+.voucher-info p { font-size: 13px; color: var(--gray); margin-bottom: 4px; }
+.voucher-price { font-size: 22px; color: var(--primary); font-weight: bold; }
+.voucher-price span { font-size: 13px; color: var(--gray); text-decoration: line-through; margin-left: 4px; }
+
+/* 秒杀页 */
+.seckill-page { max-width: 480px; margin: 0 auto; padding: 20px; }
+.countdown { text-align: center; margin: 20px 0; }
+.countdown .label { font-size: 13px; color: var(--gray); }
+.countdown .time { font-size: 36px; font-weight: bold; color: var(--primary); letter-spacing: 2px; }
+
+/* 订单状态页 */
+.status-page { text-align: center; padding: 60px 20px; }
+.status-icon { font-size: 64px; margin-bottom: 16px; }
+.status-text { font-size: 20px; font-weight: bold; margin-bottom: 8px; }
+.status-sub { font-size: 14px; color: var(--gray); }
+
+/* loading */
+.loading { text-align: center; padding: 40px; color: var(--gray); }

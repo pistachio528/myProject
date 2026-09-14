@@ -1,0 +1,96 @@
+version: '3.8'   #Docker Compose 的版本号
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: hmdp-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: hmdp_seckill
+      MYSQL_CHARSET: utf8mb4
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./hmdp-seckill/src/main/resources/db/migration:/docker-entrypoint-initdb.d
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --init-connect='SET NAMES utf8mb4'
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.2
+    container_name: hmdp-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    # 混合持久化（AOF + RDB）：Redis 4.0+ 推荐方案
+    # --appendonly yes：开启 AOF，每条写命令追加到磁盘
+    # --appendfsync everysec：每秒刷盘，最多丢失 1 秒数据
+    # --aof-use-rdb-preamble yes：AOF 重写时用 RDB 格式写文件头，恢复速度快
+    # 效果：恢复速度接近 RDB，数据完整性接近 AOF
+    command: redis-server --appendonly yes --appendfsync everysec --aof-use-rdb-preamble yes
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: hmdp-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"  # 管理界面
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    restart: unless-stopped
+
+  milvus-etcd:
+    image: quay.io/coreos/etcd:v3.5.5
+    container_name: hmdp-milvus-etcd
+    environment:
+      ETCD_AUTO_COMPACTION_MODE: revision
+      ETCD_AUTO_COMPACTION_RETENTION: "1000"
+      ETCD_QUOTA_BACKEND_BYTES: "4294967296"
+      ETCD_SNAPSHOT_COUNT: "50000"
+    volumes:
+      - milvus_etcd_data:/etcd
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    restart: unless-stopped
+
+  milvus-minio:
+    image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+    container_name: hmdp-milvus-minio
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    ports:
+      - "9001:9001"
+    volumes:
+      - milvus_minio_data:/minio_data
+    command: minio server /minio_data --console-address ":9001"
+    restart: unless-stopped
+
+  milvus:
+    image: milvusdb/milvus:v2.3.4
+    container_name: hmdp-milvus
+    command: ["milvus", "run", "standalone"]
+    environment:
+      ETCD_ENDPOINTS: milvus-etcd:2379
+      MINIO_ADDRESS: milvus-minio:9000
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    volumes:
+      - milvus_data:/var/lib/milvus
+    depends_on:
+      - milvus-etcd
+      - milvus-minio
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  redis_data:
+  rabbitmq_data:
+  milvus_etcd_data:
+  milvus_minio_data:
+  milvus_data:
